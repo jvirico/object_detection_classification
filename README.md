@@ -70,8 +70,6 @@ The reference model for classification is empirically obtained, and Mean and Var
 
 As a method to measure the feature distance to the model classes' features, we use Euclidean Distance:  
 
-$ED(\overrightarrow{f},\overrightarrow{f_{m}}) = \sum_{i=1}^{n}\sqrt{(f_{i}-\mu_{mi})^2}$  
-
 <a href="https://www.codecogs.com/eqnedit.php?latex=ED(\overrightarrow{f},\overrightarrow{f_{m}})&space;=&space;\sum_{i=1}^{n}\sqrt{(f_{i}-\mu_{mi})^2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?ED(\overrightarrow{f},\overrightarrow{f_{m}})&space;=&space;\sum_{i=1}^{n}\sqrt{(f_{i}-\mu_{mi})^2}" title="ED(\overrightarrow{f},\overrightarrow{f_{m}}) = \sum_{i=1}^{n}\sqrt{(f_{i}-\mu_{mi})^2}" /></a>
 
 
@@ -111,14 +109,16 @@ We have improved this approach by incorporating foreground history information i
 
 We measure the foreground temporal variation to get a Foreground History Image FHIt(x), by adding the foreground history with a weighted foreground mask. The contribution of the foreground ($F Gt(x) = 1$) and background ($F Gt(x) = 0$) detection are managed by incorporating different costs.  
 
-$FHIt(x) = FHIt−1(x) + I-COST * FGt(x)$  
-$FHIt(x) = FHIt−1(x) - D-COST* \sim FGt(x)$  
+<a href="https://www.codecogs.com/eqnedit.php?latex=FHIt(x)&space;=&space;FHIt&space;-&space;1(x)&space;&plus;&space;I-COST&space;*&space;FGt(x)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?FHIt(x)&space;=&space;FHIt&space;-&space;1(x)&space;&plus;&space;I-COST&space;*&space;FGt(x)" title="FHIt(x) = FHIt - 1(x) + I-COST * FGt(x)" /></a>  
+
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=FHIt(x)&space;=&space;FHIt-1(x)-D-&space;COST*&space;\sim&space;FGt(x)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?FHIt(x)&space;=&space;FHIt-1(x)-D-&space;COST*&space;\sim&space;FGt(x)" title="FHIt(x) = FHIt-1(x)-D- COST* \sim FGt(x)" /></a>  
 
 We increment FHIt values when they belong to the foreground and decrement $FHIt$ at a higher rate than the positive one (instead of resetting it to 0) when they belong to the background. Because, if we reset FHIt values to 0 when they are background we may lose correct stationary detection due to foreground detection error. The learning rate value has a big effect on the performance of our code. Therefore, we have used a small number for the learning rate which decreases the performance of the foreground mask. We later improve this using the morphological method.  
 
 After obtaining foreground history, we normalize it to the range [0, 1] by the video frame rate and remove negative values in case there is one. (fps) and the stationary detection time (secstationary):  
 
-$FHIt(x) = min{1, FHIt(x)/(fps * secstationary)}$  
+<a href="https://www.codecogs.com/eqnedit.php?latex=FHIt(x)&space;=&space;min\{1,&space;FHIt(x)/(fps&space;*&space;secstationary)\}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?FHIt(x)&space;=&space;min\{1,&space;FHIt(x)/(fps&space;*&space;secstationary)\}" title="FHIt(x) = min\{1, FHIt(x)/(fps * secstationary)\}" /></a>  
 
 Finally, the foreground history is compared with some threshold value. Then we set a stationary foreground mask to 1 if it is greater than the threshold $FHIt(x) ≥ STAT_TH$. and set it to 0 if it is less than the threshold. $FHIt(x) < STAT_TH$.  
 
