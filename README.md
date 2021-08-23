@@ -65,6 +65,13 @@ The **second approach** considers the color channels of the blob. We use the coo
 
 Fig. 3. Person blob.  
 
+<img src="./img/h_02_h.png" alt="drawing" width="200"/>  
+
+Fig. 4. Person RGB Histogram.  
+
+We would like to point out that channels H and S of HSV are known to have better photoelectric invariability, so histograms of H and S color channels are better candidates for the construction of a more robust Model against changes in imaging conditions.  
+
+The histograms have been normalized, so Blobs with different sizes can be compared against the histograms of a model.
 
 <img src="./img/class_01.png" alt="drawing" width="200"/>  
 
