@@ -1,14 +1,14 @@
 # Object Detection and Classification using OpenCV and C++
 
 ## Introduction
-Object detection and classification using Computer Vision, OpenCV, and C++.  
+Object detection and classification for video using Computer Vision methods with OpenCV, and C++.  
 
-Implements: 
-    (1) blob extraction using  SequentialGrass-Fire algorithm, removing the blobs with a size below a certain threshold to eliminate noise.  
-    (2) Blob classification using Aspect Ratio feature and simple statistical classifier.  
-    (3) Implementation of extraction of stationary foreground pixels based on foreground history.  
-    (4) Custom implementation of Grass-Fire algorithm without using OpenCV’s in-built Connected Component Analysis functionalities.  
-    (5) Attempt to improve blob classification by using statistical properties of color channels. The implementation is tested on two datasets.  
+Implements:  
+1. blob extraction using  SequentialGrass-Fire algorithm, removing the blobs with a size below a certain threshold to eliminate noise.  
+2. Blob classification using Aspect Ratio feature and simple statistical classifier.
+3. Implementation of extraction of stationary foreground pixels based on foreground history.  
+4. Custom implementation of Grass-Fire algorithm without using OpenCV’s in-built Connected Component Analysis functionalities.  
+5. Attempt to improve blob classification by using statistical properties of color channels. The implementation is tested on two datasets.  
 
 ## Methods
 
@@ -33,7 +33,21 @@ Fig. 2. Applying morphological operator 'Opening'.
 
 With this noise removal we facilitate further steps.  
 
-## Blob Extraction using CCA  
+
+<img src="./img/la2i13.png" alt="drawing" width="200"/>  
+
+Fig. 3. Frame. 
+
+<img src="./img/la2i11.png" alt="drawing" width="200"/>  
+
+Fig. 4. Foreground mask. 
+
+<img src="./img/la2i12.png" alt="drawing" width="200"/>  
+
+Fig. 5. Blob extraction. 
+
+
+### Blob Extraction using CCA  
 
 Blob extraction using Connected Component Analysis (CCA) has been implemented using three different methods, which are based on *Sequential Grass-Fire* algorithm:  
 
@@ -46,10 +60,11 @@ So CCA is also tested using OpenCV *connectedComponentsWithStatsThese*. This sec
 
 The last method implemented corresponds to our own version of Grass-Fire algorithm, using its non-recursive version. The algorithm works, but presents similar performance issues as the *FloodFill* version, slowing down very fast when big blobs enter the scene.
 
-## Blob classificaion  
-For the classification part, a simple Gaussian statistical classifier using only *aspect ratio* feature is implemented.  
+### Blob (object) classificaion  
+For the classification part, a simple Gaussian statistical classifier using the feature *aspect ratio* is implemented.  
 
-The model for classification is empirically obtained, and Mean and Variance for each of the classes (PERSON, CAR and OBJECT) are hardcoded in the C++ Project.
+The reference model for classification is empirically obtained, and Mean and Variance for each of the classes (PERSON, CAR and OBJECT) are hardcoded in the C++ Project.  
+
 As a method to measure the feature distance to the model classes' features, we use Euclidean Distance:  
 
 $ED(\overrightarrow{f},\overrightarrow{f_{m}}) = \sum_{i=1}^{n}\sqrt{(f_{i}-\mu_{mi})^2}$  
@@ -69,13 +84,44 @@ Fig. 3. Person blob.
 
 Fig. 4. Person RGB Histogram.  
 
-We would like to point out that channels H and S of HSV are known to have better photoelectric invariability, so histograms of H and S color channels are better candidates for the construction of a more robust Model against changes in imaging conditions.  
+<img src="./img/h_04_b.png" alt="drawing" width="80"/>  
+
+Fig. 3. Car blob.  
+
+<img src="./img/h_04_h.png" alt="drawing" width="200"/>  
+
+Fig. 4. Car RGB Histogram.  
+
+It is relevant to point out that channels H and S of HSV are known to have better photoelectric invariability, so histograms of H and S color channels are better candidates for the construction of a more robust Model against changes in imaging conditions.  
 
 The histograms have been normalized, so Blobs with different sizes can be compared against the histograms of a model.
 
-<img src="./img/class_01.png" alt="drawing" width="200"/>  
+Since we lack the amount of data to generate a model based on these features, we just include the algorithm for classification in the C++ project, but we can not report a formal evaluation of the approach.
 
-Fig. 2. Classification Examples.  
+### Stationary Foreground Detection based on Foreground History
+Different methods can be used to detect stationary foregrounds. One approach is the adaptive background subtraction algorithm using different learning rates. Depending on the learning rate, we do not get a good performance as the static objects were detected as background before they become static.  
+
+We have improved this approach by incorporating foreground history information into the background subtraction method in the following manner.  
+
+We measure the foreground temporal variation to get a Foreground History Image FHIt(x), by adding the foreground history with a weighted foreground mask. The contribution of the foreground ($F Gt(x) = 1$) and background ($F Gt(x) = 0$) detection are managed by incorporating different costs.  
+
+$FHIt(x) = FHIt−1(x) + I-COST * FGt(x)$  
+$FHIt(x) = FHIt−1(x) - D-COST* \sim FGt(x)$  
+
+We increment FHIt values when they belong to the foreground and decrement $FHIt$ at a higher rate than the positive one (instead of resetting it to 0) when they belong to the background. Because, if we reset FHIt values to 0 when they are background we may lose correct stationary detection due to foreground detection error. The learning rate value has a big effect on the performance of our code. Therefore, we have used a small number for the learning rate which decreases the performance of the foreground mask. We later improve this using the morphological method.  
+
+After obtaining foreground history, we normalize it to the range [0, 1] by the video frame rate and remove negative values in case there is one. (fps) and the stationary detection time (secstationary):  
+
+$FHIt(x) = min{1, FHIt(x)/(fps * secstationary)}$  
+
+Finally, the foreground history is compared with some threshold value. Then we set a stationary foreground mask to 1 if it is greater than the threshold $FHIt(x) ≥ STAT_TH$. and set it to 0 if it is less than the threshold. $FHIt(x) < STAT_TH$.  
+
+## Implementation and Dependencies
+The development environment used was Visual Studio 2017 with OpenCV 3.4.4 and the programming language C++, running on a Windows machine. And a second development environment using an Ubuntu Virtual Machine, Eclipse and OpenCV 3.4.4. The C++ project files are include under './src/' folder.
+
+
+## Conclusion
+We can conclude that blob analysis is highly dependent on the quality of the background mask subtracted, making important to dedicate special attention to the background segmentation method utilized. In our case, the use of morphological operations to reduce noise has turned to be effective. For blob extraction, a simple Sequential Grass-Fire algorithm implementation can be computationally costly, so the optimization of this part is also important, specially if a real-time application is being considered. In addition, we haven't noticed big differences by changing the structuring element (4,8) used by Grass-Fire to decide connectivity. For the classification part, we have seen that a single feature produces decent results, although we experienced some problems with the class Object, since it can present statistical properties that overlap with the aspect ratio of the class Car in some cases. It would be interesting to explore more features to refine the classification, like the use of Histograms from H and V channels of HSV color space proposed.  
 
 
 ## Cite this work
