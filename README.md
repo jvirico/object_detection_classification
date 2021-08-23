@@ -114,7 +114,7 @@ We measure the foreground temporal variation to get a Foreground History Image F
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=FHIt(x)&space;=&space;FHIt-1(x)-D-&space;COST*&space;\sim&space;FGt(x)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?FHIt(x)&space;=&space;FHIt-1(x)-D-&space;COST*&space;\sim&space;FGt(x)" title="FHIt(x) = FHIt-1(x)-D- COST* \sim FGt(x)" /></a>  
 
-We increment FHIt values when they belong to the foreground and decrement $FHIt$ at a higher rate than the positive one (instead of resetting it to 0) when they belong to the background. Because, if we reset FHIt values to 0 when they are background we may lose correct stationary detection due to foreground detection error. The learning rate value has a big effect on the performance of our code. Therefore, we have used a small number for the learning rate which decreases the performance of the foreground mask. We later improve this using the morphological method.  
+We increment FHIt values when they belong to the foreground and decrement FHIt at a higher rate than the positive one (instead of resetting it to 0) when they belong to the background. Because, if we reset FHIt values to 0 when they are background we may lose correct stationary detection due to foreground detection error. The learning rate value has a big effect on the performance of our code. Therefore, we have used a small number for the learning rate which decreases the performance of the foreground mask. We later improve this using the morphological method.  
 
 After obtaining foreground history, we normalize it to the range [0, 1] by the video frame rate and remove negative values in case there is one. (fps) and the stationary detection time (secstationary):  
 
