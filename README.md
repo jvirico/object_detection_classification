@@ -1,18 +1,21 @@
 # Object Detection and Classification using OpenCV and C++
 
 ## Introduction
-Object detection and classification for video using Computer Vision methods with OpenCV, and C++.  
+Object detection and classification for video sequences using Computer Vision methods with OpenCV, and C++ [3].  
 
 Implements:  
-1. blob extraction using  SequentialGrass-Fire algorithm, removing the blobs with a size below a certain threshold to eliminate noise.  
-2. Blob classification using Aspect Ratio feature and simple statistical classifier.
-3. Implementation of extraction of stationary foreground pixels based on foreground history.  
-4. Custom implementation of Grass-Fire algorithm without using OpenCV’s in-built Connected Component Analysis functionalities.  
-5. Attempt to improve blob classification by using statistical properties of color channels. The implementation is tested on two datasets.  
+1. Blob extraction using  Sequential Grass-Fire algorithm [1], filtering the blobs with a size below a certain threshold to eliminate noise.  
+2. Blob classification using Aspect Ratio feature and simple statistical classifier.  
+3. Implements the extraction of stationary foreground pixels based on foreground history.  
+4. Custom implementation of Grass-Fire algorithm without the use of OpenCV’s built-in Connected Component Analysis functionalities [2].  
+5. Alternative method to improve blob classification by using statistical properties of color channels. The implementation is tested on two datasets.  
+
+## Data
+We use a video sequence form a static surveillance CCTV camera, that includes people crossing a path in the midle of an outdoors green area, with a car parking area in the foreground that includes moving cars. An alternative video is also used for the last implementation (5).
 
 ## Methods
 
-To begin with, Foreground Segmentation has been performed using OpenCV MOG2 subtraction method, turning to be very noisy for most of the scenarios. Before any blob analysis, we have applied a set of morphological operations to correct the noisy foreground mask, reducing the amount of false blobs detected in following steps. Blob extraction using Connected Component Analysis has been implemented using three different methods, the first being the suggested method, OpenCV 'floodFill', which presented performance issues. This led us to the second method, OpenCV 'connectedComponentsWithStats', that solves the problem of performance. The last method implemented corresponds to our own version of Grass-Fire algorithm.  
+To begin with, Foreground Segmentation has been performed using OpenCV MOG2 subtraction method [4], turning to be very noisy for most of the scenarios. Before any blob analysis, we have applied a set of morphological operations to correct the noisy foreground mask, reducing the amount of false blobs detected in following steps. Blob extraction using Connected Component Analysis has been implemented using three different methods, the first being the suggested method, OpenCV 'floodFill', which presented performance issues. This led us to the second method, OpenCV 'connectedComponentsWithStats', that solves the problem of performance. The last method implemented corresponds to our own version of Grass-Fire algorithm.  
 
 For blob Classification, the Aspect Ratio of the blobs has been used as the feature to be compared with the Person-Car-Object model pre-defined, using Euclidean Distance.  
 
@@ -78,7 +81,7 @@ The **second approach** considers the color channels of the blob. We use the coo
 
 <img src="./img/h_02_b.png" alt="drawing" width="80"/>  
 
-Fig. 3. Person blob.  
+Fig. 3. Person blob from first video sequence.  
 
 <img src="./img/h_02_h.png" alt="drawing" width="200"/>  
 
@@ -86,7 +89,7 @@ Fig. 4. Person RGB Histogram.
 
 <img src="./img/h_04_b.png" alt="drawing" width="80"/>  
 
-Fig. 3. Car blob.  
+Fig. 3. Car blob from second cideo sequence.  
 
 <img src="./img/h_04_h.png" alt="drawing" width="200"/>  
 
@@ -125,9 +128,12 @@ We can conclude that blob analysis is highly dependent on the quality of the bac
 
 
 ## Cite this work
-    J. Rico (2021) Object Detection and Classification using OpenCV and C++.
+    J. Rico (2021) Object Detection and Classification for CCTV cameras using OpenCV and C++.
     [Source code](https://github.com/jvirico/object_detection_classification)
 
 
 ## References
-[1] - []()  
+[1] - Moeslund T.B. (2012) BLOB Analysis. In: Introduction to Video and Image Processing. Undergraduate Topics in Computer Science. Springer, London. https://doi.org/10.1007/978-1-4471-2503-7_7  
+[2] - [Connected-Component labeling.](https://en.wikipedia.org/wiki/Connected-component_labeling)  
+[3] - [OpenCV Tutorial C++.](https://www.opencv-srf.com/p/introduction.html)  
+[4] - [OpenCV MOG2, Background Substraction.](https://docs.opencv.org/4.5.2/de/df4/tutorial_js_bg_subtraction.html)
