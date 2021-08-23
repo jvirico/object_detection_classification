@@ -1,12 +1,3 @@
-/* Applied Video Analysis of Sequences (AVSA)
- *
- *	LAB2: Blob detection & classification
- *	Lab2.0: Sample Opencv project
- *
- *
- * Authors: José M. Martínez (josem.martinez@uam.es), Paula Moral (paula.moral@uam.es), Juan C. San Miguel (juancarlos.sanmiguel@uam.es)
- */
-
  //system libraries C/C++
 #include <stdio.h>
 #include <iostream>
