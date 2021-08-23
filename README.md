@@ -72,6 +72,9 @@ As a method to measure the feature distance to the model classes' features, we u
 
 $ED(\overrightarrow{f},\overrightarrow{f_{m}}) = \sum_{i=1}^{n}\sqrt{(f_{i}-\mu_{mi})^2}$  
 
+<a href="https://www.codecogs.com/eqnedit.php?latex=ED(\overrightarrow{f},\overrightarrow{f_{m}})&space;=&space;\sum_{i=1}^{n}\sqrt{(f_{i}-\mu_{mi})^2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?ED(\overrightarrow{f},\overrightarrow{f_{m}})&space;=&space;\sum_{i=1}^{n}\sqrt{(f_{i}-\mu_{mi})^2}" title="ED(\overrightarrow{f},\overrightarrow{f_{m}}) = \sum_{i=1}^{n}\sqrt{(f_{i}-\mu_{mi})^2}" /></a>
+
+
 We are using a single feature, so no normalization has been performed. For every blob we compute the Euclidean distance of its Aspect Ratio to the Mean of each class, and only consider those values that are inside the variance range (Mean $\pm$ Variance) as candidate classes for the blob. Finally we pick the class with the smallest Euclidean distance to the blob. If any class is selected we set the blob with the class UNKNOWN.  
 
 With this method, the miss-classification of people and cars for UNKNOWN class has turned to be high, therefore we implemented two approaches to try to improve it. The **first approach** consists on a simplification of the method based on Aspect Ratio already mentioned. By suppressing the restriction of having to meet the variance, and giving preference to the classes PERSON and CAR, we can increase the amount of times a PERSON or a CAR are correctly classified with much better accuracy, but this goes in detriment of the third class, OBJECT, that is almost never picked.  
